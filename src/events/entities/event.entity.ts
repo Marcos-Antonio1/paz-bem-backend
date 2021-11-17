@@ -1,6 +1,7 @@
 import { Church } from 'src/church/entities/church.entity';
 import {
     Column,
+    CreateDateColumn,
     Entity,
     ManyToOne,
     OneToMany,
@@ -32,6 +33,9 @@ export class Event{
 
     @Column({length:200})
     anexo:string;
+
+    @CreateDateColumn()
+    created_at:Date;
     
     @ManyToOne(() => Church, church => church.event)
     church: Church;

@@ -34,7 +34,7 @@ export class PublicationController {
         return await this.publication.deletePublication(id,idpublication);
     }
 
-    @ApiOperation({summary:"Buscar uma publicação"})
+    @ApiOperation({summary:"Selecionar uma publicação"})
     @ApiResponse({status:200})
     @Get('/edit/:id/:idpublication')
     async selectPublication(@Param('id')id:string,@Param('idpublication')idpublication:string){

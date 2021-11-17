@@ -15,7 +15,7 @@ import { AuthModule } from './auth/auth.module';
       port: 5432,
       username: 'postgres',
       password: 'root',
-      database: 'paz_e_bem',
+      database: 'postgres',
       entities: [__dirname +'/**/*.entity{.js,.ts}'],
       synchronize: true,
       uuidExtension:'uuid-ossp'
