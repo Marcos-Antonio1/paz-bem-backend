@@ -1,9 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { ParametersPagination } from './dto/parameters-pagination.dto';
 import { EditPublicationDto } from './dto/update-publication.dto';
 import { PublicationService } from './publication.service';
+import { storage,fileFilter,limits } from './storage.config';
+
 
 @ApiTags('Publication')
 @Controller('publication')
@@ -16,14 +19,33 @@ export class PublicationController {
     @ApiOperation({summary:"Criar publicação"})
     @ApiResponse({status:200})
     @Post('/create/:id')
-    async createPublication(@Param('id')id:string,@Body() createPublication:CreatePublicationDto){
+    @UseInterceptors(
+        
+        FileInterceptor("image",{storage,fileFilter,limits}), 
+    )
+    @ApiConsumes('multipart/form-data')
+    async createPublication(@Param('id')id:string,@Body() createPublication:CreatePublicationDto,@UploadedFile()image){
+        if(image == undefined){
+            createPublication.image = "/upload/images/publicationImage/default.image.jpg";
+            return await this.publication.createPublication(id,createPublication)
+        }
+        createPublication.image = image.path;
         return await this.publication.createPublication(id,createPublication)
     } 
 
     @ApiOperation({summary:"Editar Publicação"})
     @ApiResponse({status:200})
     @Post('/edit/:id/:idpublication')
-    async editPublication(@Param('id')id:string,@Param('idpublication')idpublication:string, @Body() editPublication:EditPublicationDto){
+    @UseInterceptors(
+        
+        FileInterceptor("image",{storage,fileFilter,limits}), 
+    )
+    @ApiConsumes('multipart/form-data')
+    async editPublication(@Param('id')id:string,@Param('idpublication')idpublication:string,@UploadedFile()image ,@Body() editPublication:EditPublicationDto){
+        if(image == undefined){
+            return await this.publication.editPublication(id,idpublication,editPublication)    
+        }
+        editPublication.image = image.path;
         return await this.publication.editPublication(id,idpublication,editPublication)
     }
 

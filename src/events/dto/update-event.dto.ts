@@ -23,9 +23,9 @@ export class UpdateEventDto{
     @Type(()=> Date)
     end_date:Date;
     
-    @ApiPropertyOptional()  
-    image:string;
+    @ApiPropertyOptional({ type: 'string', format: 'binary' })
+    image: any;
 
-    @ApiPropertyOptional()
-    anexo:string;
+    @ApiPropertyOptional({ type: 'string', format: 'binary' })
+    anexo: any;
 }

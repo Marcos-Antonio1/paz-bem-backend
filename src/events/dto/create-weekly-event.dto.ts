@@ -20,6 +20,6 @@ export class CreateWeeklyEventDto{
     @IsNotEmpty()
     time:string
 
-    @ApiPropertyOptional()
-    image:string
+    @ApiPropertyOptional({ type: 'string', format: 'binary' })
+    image: any;
 }

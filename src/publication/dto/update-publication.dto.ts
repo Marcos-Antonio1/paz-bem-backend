@@ -5,7 +5,6 @@ export class EditPublicationDto{
     @ApiPropertyOptional()
     menssage:string;
 
-
-    @ApiPropertyOptional()
-    image:string;
+    @ApiPropertyOptional({ type: 'string', format: 'binary' })
+    image: any;
 }

@@ -15,7 +15,7 @@ export class UpdateChurchDto {
 
     @ApiPropertyOptional()
     @IsEmail()
-    email?:string;
+    email:string;
 
 
     @ApiPropertyOptional()
@@ -25,8 +25,8 @@ export class UpdateChurchDto {
     cidad?:string;
 
 
-    @ApiPropertyOptional()
-    image?:string;
+    @ApiPropertyOptional({ type: 'string', format: 'binary' })
+    image: any;
 
     @ApiPropertyOptional()
     cep?:string;

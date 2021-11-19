@@ -1,10 +1,16 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
-import {ApiTags, ApiOperation, ApiResponse} from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody} from '@nestjs/swagger';
+import { create } from 'domain';
 import { ChurchService } from './church.service';
 import { CreateChurchDto } from './dto/create-church.dto';
 import { CreateWorkTimeDto } from './dto/create-work_time.dto';
 import { UpdateChurchDto } from './dto/update-church.dto';
 import { UpdateWorkTimeDto } from './dto/update-work-time.dto';
+import {fileFilter } from './storage.config';
+import {limits} from './storage.config';
+import {storage} from './storage.config';
+
 
 @ApiTags('church')
 @Controller('church')
@@ -15,14 +21,33 @@ export class ChurchController {
     @ApiOperation({summary:"Criar uma nova igreja"})
     @ApiResponse({status:200,description:"igreja cadastrada com sucesso"})
     @Post('/create')
-    async createChurh(@Body() createdto:CreateChurchDto){
+    @UseInterceptors(
+        
+        FileInterceptor("image",{storage,fileFilter,limits}), 
+    )
+    @ApiConsumes('multipart/form-data')
+    async createChurh(@Body() createdto:CreateChurchDto,@UploadedFile()image){
+        if(image === undefined){
+           createdto.image =`/upload/images/churchImage/default.image.jpg`
+            return await this.churchService.create(createdto)
+        }
+        createdto.image = image.path;
         return await this.churchService.create(createdto);
     }
 
     @ApiOperation({summary:"Editar dados da igreja"})
     @ApiResponse({status:200,description:"dados editados com sucesso"})
     @Put('/edit/:id')
-    async editChurch(@Param('id')id:string, @Body()updateChurchDto:UpdateChurchDto){
+    @UseInterceptors(
+        
+        FileInterceptor("image",{storage,fileFilter,limits}), 
+    )
+    @ApiConsumes('multipart/form-data')
+    async editChurch(@Param('id')id:string, @Body()updateChurchDto:UpdateChurchDto,@UploadedFile()image){
+        if(image == undefined){
+            return await this.churchService.update(id,updateChurchDto);    
+        }
+        updateChurchDto.image = image.path;
         return await this.churchService.update(id,updateChurchDto);
     }
 

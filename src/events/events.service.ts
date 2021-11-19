@@ -47,6 +47,16 @@ export class EventsService {
         .where("weekly_events.churchIdChurch = :id",{id}).getMany();
     }
 
+    async deleteWeeklyEvent(id,id_event){
+        try{
+            const churchFound = await this.church.getById(id);
+            return await this.eventWeekly.delete({church:churchFound,id_weekly_events:id_event});
+        }
+        catch(e){
+            throw e;
+        }
+    }
+
     async createEvent(id,createEvent:CreateEventDto){
 
         

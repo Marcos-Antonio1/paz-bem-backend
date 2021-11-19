@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ParametersPagination } from 'src/publication/dto/parameters-pagination.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
@@ -8,6 +9,10 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { UpdateWeeklyEventDto } from './dto/update-weekly-event.dto';
 import { EventsService } from './events.service';
+import { storage } from './storage.config';
+import { fileFilter } from './storage.config';
+import { limits } from './storage.config';
+
 
 @ApiTags("Events")
 @Controller('events')
@@ -20,15 +25,42 @@ export class EventsController {
     @ApiOperation({summary:"Criar Evento semanal"})
     @ApiResponse({status:200,description:"Evento cadastrado com sucesso"})
     @Post('/createventweekly/:id')
-    async createEventWeekly(@Param('id')id:string, @Body()createEventWeelky:CreateWeeklyEventDto){
-        return await this.eventService.createWeeklyEvent(id,createEventWeelky);
+    @UseInterceptors(
+        
+        FileInterceptor("image",{storage,fileFilter,limits}), 
+    )
+    @ApiConsumes('multipart/form-data')
+    async createEventWeekly(@Param('id')id:string,@UploadedFile()image ,@Body()createEventWeelky:CreateWeeklyEventDto){
+        if(image === undefined){
+            createEventWeelky.image =`/upload/images/churchImage/default.image.jpg`
+            return await this.eventService.createWeeklyEvent(id,createEventWeelky);
+        }
+        createEventWeelky.image = image.path;
+        return await this.eventService.createWeeklyEvent(id,createEventWeelky);        
     }
+
 
     @ApiOperation({summary:"Editar evento semanal"})
     @ApiResponse({status:200,description:"Evento Editado com sucesso com sucesso"})
     @Put('/createventweekly/:id/:id_weekly_event')
-    async updateEventWeekly(@Param('id')id:string,@Param('id_weekly_event') id_weekly_event:string,@Body()updateEventWeelky:UpdateWeeklyEventDto){
+    @UseInterceptors(
+        
+        FileInterceptor("image",{storage,fileFilter,limits}), 
+    )
+    @ApiConsumes('multipart/form-data')
+    async updateEventWeekly(@Param('id')id:string,@Param('id_weekly_event') id_weekly_event:string,@Body()updateEventWeelky:UpdateWeeklyEventDto,@UploadedFile()image){
+        if(image == undefined){
+            return await this.eventService.updateWeeklyEvent(id,id_weekly_event,updateEventWeelky);
+        }
+        updateEventWeelky.image=image.path;
         return await this.eventService.updateWeeklyEvent(id,id_weekly_event,updateEventWeelky);
+    }
+
+    @ApiOperation({summary:"Deletar evento semanal"})
+    @ApiResponse({status:200, description:"evento excluído com sucesso"})
+    @Delete('/deleteventweekly/:id/:id_event')
+    async deleteEventWeekly(@Param('id')id:string,@Param('id_event')id_event:string){
+        return await this.eventService.deleteWeeklyEvent(id,id_event);
     }
 
     @ApiOperation({summary:"Listar eventos semanais"})
@@ -41,14 +73,33 @@ export class EventsController {
     @ApiOperation({summary:"Criar Evento"})
     @ApiResponse({status:200, description:"Evento criado com sucesso"})
     @Post('/createevent/:id')
-    async createEvent(@Param('id')id:string,@Body()createEvent:CreateEventDto){
+    @UseInterceptors(
+        
+        FileInterceptor("image",{storage,fileFilter,limits}), 
+    )
+    @ApiConsumes('multipart/form-data')
+    async createEvent(@Param('id')id:string,@Body()createEvent:CreateEventDto,@UploadedFile()image){
+        if(image == undefined){
+            createEvent.image =`/upload/images/churchImage/default.image.jpg`
+            return await this.eventService.createEvent(id,createEvent);    
+        }
+        createEvent.image =image.path;
         return await this.eventService.createEvent(id,createEvent);
     }
 
     @ApiOperation({summary:"Editar Evento"})
     @ApiResponse({status:200, description:"Evento Editado com sucesso"})
     @Put('/editevent/:id/:id_event')
-    async editEvent(@Param('id')id:string,@Param('id_event')id_event:string,@Body()updateEvent:UpdateEventDto){
+    @UseInterceptors(
+        
+        FileInterceptor("image",{storage,fileFilter,limits}), 
+    )
+    @ApiConsumes('multipart/form-data')
+    async editEvent(@Param('id')id:string,@Param('id_event')id_event:string,@Body()updateEvent:UpdateEventDto,@UploadedFile()image){
+        if(image =undefined){
+            return await this.eventService.editEvent(id,id_event,updateEvent);
+        }
+        updateEvent.image = image.path
         return await this.eventService.editEvent(id,id_event,updateEvent);
     }
 
@@ -68,7 +119,7 @@ export class EventsController {
 
     @ApiOperation({summary:"Selecionar Evento"})
     @ApiResponse({status:200, description:"Evento Excluido com sucesso"})
-    @Delete('/selectevent/:id/:id_event')
+    @Get('/selectevent/:id/:id_event')
     async selectEvent(@Param('id')id:string,@Param('id_event')id_event:string){
         return await this.eventService.getEvent(id,id_event);
     }

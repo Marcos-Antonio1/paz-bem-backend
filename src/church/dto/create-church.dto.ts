@@ -32,9 +32,8 @@ export class CreateChurchDto {
     @IsNotEmpty()
     cidad:string;
 
-
-    @ApiProperty()
-    image?:string;
+    @ApiPropertyOptional({ type: 'string', format: 'binary' })
+    image: any;
 
     @ApiProperty()
     @IsNotEmpty()

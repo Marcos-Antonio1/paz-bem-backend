@@ -16,6 +16,6 @@ export class UpdateWeeklyEventDto{
     @ApiPropertyOptional()
     time:string
 
-    @ApiPropertyOptional()
-    image:string
+    @ApiPropertyOptional({ type: 'string', format: 'binary' })
+    image: any;
 }

@@ -23,10 +23,10 @@ export class CreateEventDto{
     @ApiProperty({description:'ano/mes/dia'})
     @Type(()=> Date)
     end_date:Date;
-    
-    @ApiPropertyOptional()  
-    image:string;
 
-    @ApiPropertyOptional()
-    anexo:string;
+    @ApiPropertyOptional({ type: 'string', format: 'binary' })
+    image: any;
+
+    @ApiPropertyOptional({ type: 'string', format: 'binary' })
+    anexo: any;
 }
