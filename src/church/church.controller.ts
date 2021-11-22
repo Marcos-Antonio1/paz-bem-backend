@@ -27,12 +27,13 @@ export class ChurchController {
     )
     @ApiConsumes('multipart/form-data')
     async createChurh(@Body() createdto:CreateChurchDto,@UploadedFile()image){
+
         if(image === undefined){
-           createdto.image =`/upload/images/churchImage/default.image.jpg`
+           createdto.image =process.env.PREFIX_IMAGE +`/upload/images/churchImage/default.image.jpg`
             return await this.churchService.create(createdto)
         }
-        createdto.image = image.path;
-        return await this.churchService.create(createdto);
+        createdto.image = process.env.PREFIX_IMAGE + image.path;
+        return await this.churchService.create(createdto); 
     }
 
     @ApiOperation({summary:"Editar dados da igreja"})
@@ -47,7 +48,7 @@ export class ChurchController {
         if(image == undefined){
             return await this.churchService.update(id,updateChurchDto);    
         }
-        updateChurchDto.image = image.path;
+        updateChurchDto.image = process.env.PREFIX_IMAGE + image.path;
         return await this.churchService.update(id,updateChurchDto);
     }
 

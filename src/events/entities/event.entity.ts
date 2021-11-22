@@ -37,7 +37,7 @@ export class Event{
     @CreateDateColumn()
     created_at:Date;
     
-    @ManyToOne(() => Church, church => church.event)
+    @ManyToOne(() => Church, church => church.event,{onDelete:'CASCADE'})
     church: Church;
 
     @OneToMany(() => Schedule, schedule => schedule.event)

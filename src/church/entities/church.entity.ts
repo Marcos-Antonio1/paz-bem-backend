@@ -3,6 +3,8 @@ import { WorkTime } from './work_time.entity';
 import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import { WeeklyEvents } from 'src/events/entities/weekly_events.entity';
 import { Event } from 'src/events/entities/event.entity';
+import { BeforeInsert } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 
 @Entity()
@@ -64,6 +66,10 @@ export class Church {
     @OneToMany(() => Event, event  => event.church)
     event:Event[];
 
- 
+    @BeforeInsert()
+    async cryptoPassword(){
+        const salt = await bcrypt.genSalt();
+        this.password = await bcrypt.hash(this.password,salt);
+    }   
 
 }

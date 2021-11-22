@@ -20,6 +20,6 @@ export class WorkTime{
     })
     day_week:number;
 
-    @ManyToOne(() => Church, church => church.times)
+    @ManyToOne(() => Church, church => church.times,{onDelete:'CASCADE'})
     church: Church;
 }

@@ -32,10 +32,10 @@ export class EventsController {
     @ApiConsumes('multipart/form-data')
     async createEventWeekly(@Param('id')id:string,@UploadedFile()image ,@Body()createEventWeelky:CreateWeeklyEventDto){
         if(image === undefined){
-            createEventWeelky.image =`/upload/images/churchImage/default.image.jpg`
+            createEventWeelky.image =process.env.PREFIX_IMAGE +`/upload/images/churchImage/default.image.jpg`
             return await this.eventService.createWeeklyEvent(id,createEventWeelky);
         }
-        createEventWeelky.image = image.path;
+        createEventWeelky.image =process.env.PREFIX_IMAGE + image.path;
         return await this.eventService.createWeeklyEvent(id,createEventWeelky);        
     }
 
@@ -52,7 +52,7 @@ export class EventsController {
         if(image == undefined){
             return await this.eventService.updateWeeklyEvent(id,id_weekly_event,updateEventWeelky);
         }
-        updateEventWeelky.image=image.path;
+        updateEventWeelky.image=process.env.PREFIX_IMAGE +image.path;
         return await this.eventService.updateWeeklyEvent(id,id_weekly_event,updateEventWeelky);
     }
 
@@ -80,10 +80,10 @@ export class EventsController {
     @ApiConsumes('multipart/form-data')
     async createEvent(@Param('id')id:string,@Body()createEvent:CreateEventDto,@UploadedFile()image){
         if(image == undefined){
-            createEvent.image =`/upload/images/churchImage/default.image.jpg`
+            createEvent.image =`process.env.PREFIX_IMAGE +/upload/images/churchImage/default.image.jpg`
             return await this.eventService.createEvent(id,createEvent);    
         }
-        createEvent.image =image.path;
+        createEvent.image =process.env.PREFIX_IMAGE +image.path;
         return await this.eventService.createEvent(id,createEvent);
     }
 
@@ -99,7 +99,7 @@ export class EventsController {
         if(image =undefined){
             return await this.eventService.editEvent(id,id_event,updateEvent);
         }
-        updateEvent.image = image.path
+        updateEvent.image = process.env.PREFIX_IMAGE + image.path
         return await this.eventService.editEvent(id,id_event,updateEvent);
     }
 

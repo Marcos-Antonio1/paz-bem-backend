@@ -5,6 +5,9 @@ import {
 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+
+
+
 export class CreateChurchDto {
     
     @ApiProperty()
@@ -15,7 +18,7 @@ export class CreateChurchDto {
     @IsNotEmpty()
     rua:string;
 
-    @ApiProperty()
+    @ApiProperty()  
     @IsNotEmpty()
     @IsEmail()
     email:string;
@@ -57,4 +60,6 @@ export class CreateChurchDto {
     @ApiPropertyOptional()
     pix2?:string;
 
+
+    
 }

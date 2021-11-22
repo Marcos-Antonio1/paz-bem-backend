@@ -26,10 +26,10 @@ export class PublicationController {
     @ApiConsumes('multipart/form-data')
     async createPublication(@Param('id')id:string,@Body() createPublication:CreatePublicationDto,@UploadedFile()image){
         if(image == undefined){
-            createPublication.image = "/upload/images/publicationImage/default.image.jpg";
+            createPublication.image = process.env.PREFIX_IMAGE + "/upload/images/publicationImage/default.image.jpg";
             return await this.publication.createPublication(id,createPublication)
         }
-        createPublication.image = image.path;
+        createPublication.image = process.env.PREFIX_IMAGE + image.path;
         return await this.publication.createPublication(id,createPublication)
     } 
 
@@ -45,7 +45,7 @@ export class PublicationController {
         if(image == undefined){
             return await this.publication.editPublication(id,idpublication,editPublication)    
         }
-        editPublication.image = image.path;
+        editPublication.image = process.env.PREFIX_IMAGE + image.path;
         return await this.publication.editPublication(id,idpublication,editPublication)
     }
 

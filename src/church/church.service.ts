@@ -15,7 +15,8 @@ export class ChurchService {
     
     async create(createdto:CreateChurchDto){
         try{
-            return await this.churchRepository.save(createdto);
+            const church = await this.churchRepository.create(createdto);
+            return await this.churchRepository.save(church);
         }catch(erro){
             throw erro;
         }
@@ -66,6 +67,10 @@ export class ChurchService {
 
     async getById(id){
         return await this.churchRepository.findOne({id_church:id});
+    }
+
+    async getByEmail(email){
+        return await this.churchRepository.findOne({email})
     }
 
     

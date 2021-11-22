@@ -6,6 +6,7 @@ import {
     UpdateDateColumn,
     Column, 
     ManyToOne
+    
 } from 'typeorm';
 
 @Entity()
@@ -26,11 +27,7 @@ export class Publication {
     @Column()
     image:string;
 
-
-    @ManyToOne(() => Church, church => church.publi)
+    @ManyToOne(() => Church, church => church.publi,{onDelete:'CASCADE'})
     church: Church;
-
-
-
 
 }

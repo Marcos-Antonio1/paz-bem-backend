@@ -28,7 +28,7 @@ export class Schedule {
     @Column()
     menssage:string;
 
-    @ManyToOne(() => Event, event => event.schedule)
+    @ManyToOne(() => Event, event => event.schedule,{onDelete:'CASCADE'})
     event: Event;
 
 

@@ -28,7 +28,7 @@ export class WeeklyEvents{
     @Column({length:200})
     image:string
 
-    @ManyToOne(() => Church, church => church.week_events)
+    @ManyToOne(() => Church, church => church.week_events,{onDelete:'CASCADE'})
     church: Church;
 
 }
