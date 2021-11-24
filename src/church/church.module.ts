@@ -8,11 +8,12 @@ import { WorkTimeRepository } from './work_time.respository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ChurchRepository,WorkTimeRepository ])
+    TypeOrmModule.forFeature([ChurchRepository,WorkTimeRepository])
   ],
+  
   controllers: [ChurchController],
   providers: [ChurchService],
-  exports:[ChurchService]
+  exports:[ChurchService,]
   
 })
 export class ChurchModule {}
