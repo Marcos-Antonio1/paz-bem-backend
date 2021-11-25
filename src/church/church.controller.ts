@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import {ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBody} from '@nestjs/swagger';
-import { create } from 'domain';
+import {ApiTags, ApiOperation, ApiResponse, ApiConsumes, ApiBearerAuth} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ChurchService } from './church.service';
 import { CreateChurchDto } from './dto/create-church.dto';
 import { CreateWorkTimeDto } from './dto/create-work_time.dto';
@@ -35,7 +35,9 @@ export class ChurchController {
         createdto.image = process.env.PREFIX_IMAGE + image.path;
         return await this.churchService.create(createdto); 
     }
-
+    
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Editar dados da igreja"})
     @ApiResponse({status:200,description:"dados editados com sucesso"})
     @Put('/edit/:id')
@@ -52,6 +54,15 @@ export class ChurchController {
         return await this.churchService.update(id,updateChurchDto);
     }
 
+    @ApiOperation({summary:"Listar Igrejas"})
+    @ApiResponse({status:200})
+    @Get('/listChurch')
+    async ListAllChurch(){
+        return await this.churchService.listChurch();
+    }
+
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Criar Horário de funcionamento"})
     @ApiResponse({status:200,description:"Horário cadastrado com sucesso"})
     @Post('/createWorkTime/:id')
@@ -59,6 +70,7 @@ export class ChurchController {
         return await this.churchService.createWorkTime(id,createWorkTime);
     }
     
+
     @ApiOperation({summary:"Listar os horários de funcionamento"})
     @ApiResponse({status:200})
     @Get('/listWorkTime/:id')
@@ -66,6 +78,8 @@ export class ChurchController {
         return await this.churchService.listWorkTime(id);
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Atualiza horários"})
     @ApiResponse({status:200})
     @Put('/updateWortime/:id/:id_work_time')

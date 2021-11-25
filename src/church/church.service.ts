@@ -65,6 +65,10 @@ export class ChurchService {
 
     } 
 
+    async listChurch (){
+        return this.churchRepository.find();
+    }
+
     async getById(id){
         return await this.churchRepository.findOne({id_church:id});
     }

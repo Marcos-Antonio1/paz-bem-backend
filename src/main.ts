@@ -9,6 +9,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
+  .addBearerAuth()
   .setTitle('paz_e_bem')
   .setDescription('paz_e_bem api')
   .setVersion('1.0')

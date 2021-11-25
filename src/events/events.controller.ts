@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ParametersPagination } from 'src/publication/dto/parameters-pagination.dto';
 import { CreateEventDto } from './dto/create-event.dto';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
@@ -14,6 +15,7 @@ import { fileFilter } from './storage.config';
 import { limits } from './storage.config';
 
 
+
 @ApiTags("Events")
 @Controller('events')
 export class EventsController {
@@ -22,6 +24,9 @@ export class EventsController {
         private readonly eventService: EventsService
     ) {}
     
+    
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Criar Evento semanal"})
     @ApiResponse({status:200,description:"Evento cadastrado com sucesso"})
     @Post('/createventweekly/:id')
@@ -40,6 +45,8 @@ export class EventsController {
     }
 
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Editar evento semanal"})
     @ApiResponse({status:200,description:"Evento Editado com sucesso com sucesso"})
     @Put('/createventweekly/:id/:id_weekly_event')
@@ -56,6 +63,8 @@ export class EventsController {
         return await this.eventService.updateWeeklyEvent(id,id_weekly_event,updateEventWeelky);
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Deletar evento semanal"})
     @ApiResponse({status:200, description:"evento excluído com sucesso"})
     @Delete('/deleteventweekly/:id/:id_event')
@@ -70,6 +79,8 @@ export class EventsController {
         return await this.eventService.listWeeklyEvent(id);
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Criar Evento"})
     @ApiResponse({status:200, description:"Evento criado com sucesso"})
     @Post('/createevent/:id')
@@ -87,6 +98,8 @@ export class EventsController {
         return await this.eventService.createEvent(id,createEvent);
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Editar Evento"})
     @ApiResponse({status:200, description:"Evento Editado com sucesso"})
     @Put('/editevent/:id/:id_event')
@@ -103,6 +116,8 @@ export class EventsController {
         return await this.eventService.editEvent(id,id_event,updateEvent);
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Excluir Evento"})
     @ApiResponse({status:200, description:"Evento Excluido com sucesso"})
     @Delete('/deleteevent/:id/:id_event')
@@ -124,6 +139,8 @@ export class EventsController {
         return await this.eventService.getEvent(id,id_event);
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Criar Programação"})
     @ApiResponse({status:200,description:'programação criada com sucesso'})
     @Post('/createShedule/:id/:id_event')
@@ -136,6 +153,8 @@ export class EventsController {
     }
 
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Editar Programação"})
     @ApiResponse({status:200,description:'Programação criada com sucesso'})
     @Put('/editShedule/:id/:id_event/:id_schedule')
@@ -149,6 +168,8 @@ export class EventsController {
     }
 
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Excluir Programação"})
     @ApiResponse({status:200,description:'Programação Excluida com sucesso'})
     @Delete('/deleteShedule/:id/:id_event/:id_schedule')

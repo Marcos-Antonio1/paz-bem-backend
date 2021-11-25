@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { ParametersPagination } from './dto/parameters-pagination.dto';
 import { EditPublicationDto } from './dto/update-publication.dto';
@@ -16,6 +17,8 @@ export class PublicationController {
         private readonly publication:PublicationService
     ){} 
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Criar publicação"})
     @ApiResponse({status:200})
     @Post('/create/:id')
@@ -33,6 +36,8 @@ export class PublicationController {
         return await this.publication.createPublication(id,createPublication)
     } 
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Editar Publicação"})
     @ApiResponse({status:200})
     @Post('/edit/:id/:idpublication')
@@ -49,6 +54,8 @@ export class PublicationController {
         return await this.publication.editPublication(id,idpublication,editPublication)
     }
 
+    @ApiBearerAuth()
+    @UseGuards(JwtAuthGuard)
     @ApiOperation({summary:"Excluir Publicação"})
     @ApiResponse({status:200})
     @Delete('/edit/:id/:idpublication')
@@ -58,7 +65,7 @@ export class PublicationController {
 
     @ApiOperation({summary:"Selecionar uma publicação"})
     @ApiResponse({status:200})
-    @Get('/edit/:id/:idpublication')
+    @Get('/select/:id/:idpublication')
     async selectPublication(@Param('id')id:string,@Param('idpublication')idpublication:string){
         return await this.publication.getPublication(id,idpublication);
     }
